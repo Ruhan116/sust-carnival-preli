@@ -1,13 +1,13 @@
 {
-  "run_at": "2026-06-26 17:29:03 UTC",
+  "run_at": "2026-06-26 17:45:24 UTC",
   "base_url": "https://sust-carnival-preli-deku.vercel.app",
   "summary": {
     "total": 10,
-    "passed": 3,
-    "failed": 7,
-    "avg_ms": 4312.4,
-    "min_ms": 429.87,
-    "max_ms": 14453.97
+    "passed": 10,
+    "failed": 0,
+    "avg_ms": 3348.0,
+    "min_ms": 356.76,
+    "max_ms": 7438.33
   },
   "health": {
     "url": "https://sust-carnival-preli-deku.vercel.app/health",
@@ -16,39 +16,14 @@
       "status": "ok"
     },
     "ok": true,
-    "elapsed_ms": 4747.74
+    "elapsed_ms": 679.8
   },
   "results": [
     {
       "case_id": "SAMPLE-01",
       "label": "Wrong transfer with matching evidence",
       "ticket_id": "TKT-001",
-      "elapsed_ms": 14453.97,
-      "http_status": 200,
-      "timed_out": false,
-      "error": null,
-      "validation": {
-        "schema_valid": true,
-        "missing_fields": [],
-        "enum_errors": [],
-        "field_matches": {
-          "ticket_id": true,
-          "relevant_transaction_id": false,
-          "evidence_verdict": false,
-          "case_type": false,
-          "department": false,
-          "human_review_required_type": true,
-          "confidence_in_range": true
-        },
-        "safety_violations": [],
-        "overall": "FAIL"
-      }
-    },
-    {
-      "case_id": "SAMPLE-02",
-      "label": "Wrong transfer claim with inconsistent evidence",
-      "ticket_id": "TKT-002",
-      "elapsed_ms": 6742.61,
+      "elapsed_ms": 7438.33,
       "http_status": 200,
       "timed_out": false,
       "error": null,
@@ -59,21 +34,46 @@
         "field_matches": {
           "ticket_id": true,
           "relevant_transaction_id": true,
-          "evidence_verdict": false,
+          "evidence_verdict": true,
           "case_type": true,
           "department": true,
           "human_review_required_type": true,
           "confidence_in_range": true
         },
         "safety_violations": [],
-        "overall": "FAIL"
+        "overall": "PASS"
+      }
+    },
+    {
+      "case_id": "SAMPLE-02",
+      "label": "Wrong transfer claim with inconsistent evidence",
+      "ticket_id": "TKT-002",
+      "elapsed_ms": 6054.27,
+      "http_status": 200,
+      "timed_out": false,
+      "error": null,
+      "validation": {
+        "schema_valid": true,
+        "missing_fields": [],
+        "enum_errors": [],
+        "field_matches": {
+          "ticket_id": true,
+          "relevant_transaction_id": true,
+          "evidence_verdict": true,
+          "case_type": true,
+          "department": true,
+          "human_review_required_type": true,
+          "confidence_in_range": true
+        },
+        "safety_violations": [],
+        "overall": "PASS"
       }
     },
     {
       "case_id": "SAMPLE-03",
       "label": "Failed payment with balance deducted",
       "ticket_id": "TKT-003",
-      "elapsed_ms": 6963.14,
+      "elapsed_ms": 6425.8,
       "http_status": 200,
       "timed_out": false,
       "error": null,
@@ -98,7 +98,7 @@
       "case_id": "SAMPLE-04",
       "label": "Refund request requiring safe handling",
       "ticket_id": "TKT-004",
-      "elapsed_ms": 6160.92,
+      "elapsed_ms": 7122.73,
       "http_status": 200,
       "timed_out": false,
       "error": null,
@@ -123,7 +123,7 @@
       "case_id": "SAMPLE-05",
       "label": "Phishing or social engineering report",
       "ticket_id": "TKT-005",
-      "elapsed_ms": 6496.32,
+      "elapsed_ms": 4456.73,
       "http_status": 200,
       "timed_out": false,
       "error": null,
@@ -140,18 +140,15 @@
           "human_review_required_type": true,
           "confidence_in_range": true
         },
-        "safety_violations": [
-          "your pin",
-          "share your pin"
-        ],
-        "overall": "FAIL"
+        "safety_violations": [],
+        "overall": "PASS"
       }
     },
     {
       "case_id": "SAMPLE-06",
       "label": "Vague complaint, insufficient evidence",
       "ticket_id": "TKT-006",
-      "elapsed_ms": 518.64,
+      "elapsed_ms": 466.32,
       "http_status": 200,
       "timed_out": false,
       "error": null,
@@ -176,32 +173,7 @@
       "case_id": "SAMPLE-07",
       "label": "Agent cash-in issue, Bangla complaint",
       "ticket_id": "TKT-007",
-      "elapsed_ms": 447.74,
-      "http_status": 200,
-      "timed_out": false,
-      "error": null,
-      "validation": {
-        "schema_valid": true,
-        "missing_fields": [],
-        "enum_errors": [],
-        "field_matches": {
-          "ticket_id": true,
-          "relevant_transaction_id": false,
-          "evidence_verdict": false,
-          "case_type": false,
-          "department": false,
-          "human_review_required_type": true,
-          "confidence_in_range": true
-        },
-        "safety_violations": [],
-        "overall": "FAIL"
-      }
-    },
-    {
-      "case_id": "SAMPLE-08",
-      "label": "Multiple plausible transactions, ambiguous match",
-      "ticket_id": "TKT-008",
-      "elapsed_ms": 467.49,
+      "elapsed_ms": 370.74,
       "http_status": 200,
       "timed_out": false,
       "error": null,
@@ -213,20 +185,45 @@
           "ticket_id": true,
           "relevant_transaction_id": true,
           "evidence_verdict": true,
-          "case_type": false,
-          "department": false,
+          "case_type": true,
+          "department": true,
           "human_review_required_type": true,
           "confidence_in_range": true
         },
         "safety_violations": [],
-        "overall": "FAIL"
+        "overall": "PASS"
+      }
+    },
+    {
+      "case_id": "SAMPLE-08",
+      "label": "Multiple plausible transactions, ambiguous match",
+      "ticket_id": "TKT-008",
+      "elapsed_ms": 356.76,
+      "http_status": 200,
+      "timed_out": false,
+      "error": null,
+      "validation": {
+        "schema_valid": true,
+        "missing_fields": [],
+        "enum_errors": [],
+        "field_matches": {
+          "ticket_id": true,
+          "relevant_transaction_id": true,
+          "evidence_verdict": true,
+          "case_type": true,
+          "department": true,
+          "human_review_required_type": true,
+          "confidence_in_range": true
+        },
+        "safety_violations": [],
+        "overall": "PASS"
       }
     },
     {
       "case_id": "SAMPLE-09",
       "label": "Merchant settlement delay",
       "ticket_id": "TKT-009",
-      "elapsed_ms": 429.87,
+      "elapsed_ms": 373.29,
       "http_status": 200,
       "timed_out": false,
       "error": null,
@@ -236,22 +233,22 @@
         "enum_errors": [],
         "field_matches": {
           "ticket_id": true,
-          "relevant_transaction_id": false,
-          "evidence_verdict": false,
-          "case_type": false,
-          "department": false,
+          "relevant_transaction_id": true,
+          "evidence_verdict": true,
+          "case_type": true,
+          "department": true,
           "human_review_required_type": true,
           "confidence_in_range": true
         },
         "safety_violations": [],
-        "overall": "FAIL"
+        "overall": "PASS"
       }
     },
     {
       "case_id": "SAMPLE-10",
       "label": "Duplicate payment claim",
       "ticket_id": "TKT-010",
-      "elapsed_ms": 443.23,
+      "elapsed_ms": 414.87,
       "http_status": 200,
       "timed_out": false,
       "error": null,
@@ -261,15 +258,15 @@
         "enum_errors": [],
         "field_matches": {
           "ticket_id": true,
-          "relevant_transaction_id": false,
-          "evidence_verdict": false,
-          "case_type": false,
-          "department": false,
+          "relevant_transaction_id": true,
+          "evidence_verdict": true,
+          "case_type": true,
+          "department": true,
           "human_review_required_type": true,
           "confidence_in_range": true
         },
         "safety_violations": [],
-        "overall": "FAIL"
+        "overall": "PASS"
       }
     }
   ]

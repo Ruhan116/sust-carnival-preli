@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>QueueStorm Investigator — Test Report</title>
+  <style>
+    :root{--bg:#0f1117;--card:#1a1d27;--border:#2a2d3e;--green:#22c55e;--red:#ef4444;--yellow:#f59e0b;--blue:#3b82f6;--text:#e2e8f0;--muted:#8892a4;}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);padding:32px 24px;min-height:100vh}
+    h1{font-size:1.8rem;font-weight:700;margin-bottom:4px;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .subtitle{color:var(--muted);font-size:.9rem;margin-bottom:28px}
+    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:32px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center}
+    .card .num{font-size:2.2rem;font-weight:700;line-height:1.1}
+    .card .lbl{font-size:.78rem;color:var(--muted);margin-top:6px;text-transform:uppercase;letter-spacing:.05em}
+    .green{color:var(--green)} .red{color:var(--red)} .yellow{color:var(--yellow)} .blue{color:var(--blue)}
+    .badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.8rem;font-weight:600}
+    .badge.pass{background:#14532d;color:var(--green)} .badge.fail{background:#450a0a;color:var(--red)}
+    .health-bar{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+    .health-bar span{color:var(--muted);font-size:.88rem}
+    .chart-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:32px}
+    .chart-wrap h2{font-size:1rem;font-weight:600;margin-bottom:18px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+    canvas{width:100%!important;max-width:100%}
+    table{width:100%;border-collapse:collapse;background:var(--card);border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+    th{background:#12151f;color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;padding:10px 12px;text-align:left;white-space:nowrap}
+    td{padding:10px 12px;border-top:1px solid var(--border);font-size:.83rem;vertical-align:top}
+    td.pass{color:var(--green);font-weight:600} td.fail{color:var(--red);font-weight:600}
+    td.match{color:var(--green);text-align:center} td.mismatch{color:var(--red);text-align:center} td.na{color:var(--muted);text-align:center}
+    .ok{color:var(--green)} .enum-err{color:var(--red);font-size:.78rem} .safety-err{color:var(--yellow);font-size:.78rem}
+    .missing{color:var(--red);font-size:.78rem}
+    .footer{margin-top:32px;text-align:center;color:var(--muted);font-size:.8rem}
+    tr:hover td{background:#1f2335}
+    .tbl-wrap{overflow-x:auto;border-radius:12px}
+  </style>
+</head>
+<body>
+  <h1>QueueStorm Investigator — Test Report</h1>
+  <p class="subtitle">Run at 2026-06-26 16:56:01 UTC &nbsp;·&nbsp; Endpoint: <code>https://sust-carnival-preli-deku.vercel.app</code></p>
+
+  <div class="health-bar">
+    <strong>Health Check</strong>
+    <span class="badge pass">✓ OK</span>
+    <span>GET /health → 200 &nbsp;·&nbsp; 424.12 ms</span>
+  </div>
+
+  <div class="cards">
+    <div class="card"><div class="num blue">10</div><div class="lbl">Total Cases</div></div>
+    <div class="card"><div class="num green">4</div><div class="lbl">Passed</div></div>
+    <div class="card"><div class="num red">6</div><div class="lbl">Failed</div></div>
+    <div class="card"><div class="num yellow">3813.4 ms</div><div class="lbl">Avg Response</div></div>
+    <div class="card"><div class="num green">8129.25 ms</div><div class="lbl">Max Response</div></div>
+    <div class="card"><div class="num blue">451.06 ms</div><div class="lbl">Min Response</div></div>
+  </div>
+
+  <div class="chart-wrap">
+    <h2>Response Time per Case (ms)</h2>
+    <canvas id="timingChart" height="80"></canvas>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Case</th><th>Result</th><th>Time</th><th>HTTP</th>
+          <th>ticket_id</th><th>txn_id</th><th>evidence</th><th>case_type</th>
+          <th>dept</th><th>hrr</th><th>Safety</th><th>Enums</th><th>Missing</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>SAMPLE-01</b><br><small>Wrong transfer with matching evidence</small></td>
+          <td class="pass">PASS</td>
+          <td>8129.25 ms</td>
+          <td>200</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td><span class="ok">✓</span></td>
+          <td><span class="ok">✓</span></td>
+          <td class="missing">—</td>
+        </tr>
+        <tr>
+          <td><b>SAMPLE-02</b><br><small>Wrong transfer claim with inconsistent evidence</small></td>
+          <td class="fail">FAIL</td>
+          <td>6605.4 ms</td>
+          <td>200</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="mismatch">✗</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td><span class="ok">✓</span></td>
+          <td><span class="ok">✓</span></td>
+          <td class="missing">—</td>
+        </tr>
+        <tr>
+          <td><b>SAMPLE-03</b><br><small>Failed payment with balance deducted</small></td>
+          <td class="pass">PASS</td>
+          <td>4923.98 ms</td>
+          <td>200</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td><span class="ok">✓</span></td>
+          <td><span class="ok">✓</span></td>
+          <td class="missing">—</td>
+        </tr>
+        <tr>
+          <td><b>SAMPLE-04</b><br><small>Refund request requiring safe handling</small></td>
+          <td class="pass">PASS</td>
+          <td>6899.81 ms</td>
+          <td>200</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td><span class="ok">✓</span></td>
+          <td><span class="ok">✓</span></td>
+          <td class="missing">—</td>
+        </tr>
+        <tr>
+          <td><b>SAMPLE-05</b><br><small>Phishing or social engineering report</small></td>
+          <td class="fail">FAIL</td>
+          <td>5748.68 ms</td>
+          <td>200</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td><span class="safety-err">⚠ "your pin"</span><br><span class="safety-err">⚠ "share your pin"</span></td>
+          <td><span class="ok">✓</span></td>
+          <td class="missing">—</td>
+        </tr>
+        <tr>
+          <td><b>SAMPLE-06</b><br><small>Vague complaint, insufficient evidence</small></td>
+          <td class="pass">PASS</td>
+          <td>3912.7 ms</td>
+          <td>200</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td><span class="ok">✓</span></td>
+          <td><span class="ok">✓</span></td>
+          <td class="missing">—</td>
+        </tr>
+        <tr>
+          <td><b>SAMPLE-07</b><br><small>Agent cash-in issue, Bangla complaint</small></td>
+          <td class="fail">FAIL</td>
+          <td>462.14 ms</td>
+          <td>200</td>
+          <td class="match">✓</td>
+          <td class="mismatch">✗</td>
+          <td class="mismatch">✗</td>
+          <td class="mismatch">✗</td>
+          <td class="mismatch">✗</td>
+          <td class="match">✓</td>
+          <td><span class="ok">✓</span></td>
+          <td><span class="ok">✓</span></td>
+          <td class="missing">—</td>
+        </tr>
+        <tr>
+          <td><b>SAMPLE-08</b><br><small>Multiple plausible transactions, ambiguous match</small></td>
+          <td class="fail">FAIL</td>
+          <td>451.06 ms</td>
+          <td>200</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="match">✓</td>
+          <td class="mismatch">✗</td>
+          <td class="mismatch">✗</td>
+          <td class="match">✓</td>
+          <td><span class="ok">✓</span></td>
+          <td><span class="ok">✓</span></td>
+          <td class="missing">—</td>
+        </tr>
+        <tr>
+          <td><b>SAMPLE-09</b><br><small>Merchant settlement delay</small></td>
+          <td class="fail">FAIL</td>
+          <td>487.38 ms</td>
+          <td>200</td>
+          <td class="match">✓</td>
+          <td class="mismatch">✗</td>
+          <td class="mismatch">✗</td>
+          <td class="mismatch">✗</td>
+          <td class="mismatch">✗</td>
+          <td class="match">✓</td>
+          <td><span class="ok">✓</span></td>
+          <td><span class="ok">✓</span></td>
+          <td class="missing">—</td>
+        </tr>
+        <tr>
+          <td><b>SAMPLE-10</b><br><small>Duplicate payment claim</small></td>
+          <td class="fail">FAIL</td>
+          <td>513.68 ms</td>
+          <td>200</td>
+          <td class="match">✓</td>
+          <td class="mismatch">✗</td>
+          <td class="mismatch">✗</td>
+          <td class="mismatch">✗</td>
+          <td class="mismatch">✗</td>
+          <td class="match">✓</td>
+          <td><span class="ok">✓</span></td>
+          <td><span class="ok">✓</span></td>
+          <td class="missing">—</td>
+        </tr></tbody>
+    </table>
+  </div>
+
+  <p class="footer">Generated by QueueStorm Test Runner · 2026-06-26 16:56:01 UTC</p>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script>
+    const data = [{"id": "SAMPLE-01", "ms": 8129.25, "pass": true}, {"id": "SAMPLE-02", "ms": 6605.4, "pass": false}, {"id": "SAMPLE-03", "ms": 4923.98, "pass": true}, {"id": "SAMPLE-04", "ms": 6899.81, "pass": true}, {"id": "SAMPLE-05", "ms": 5748.68, "pass": false}, {"id": "SAMPLE-06", "ms": 3912.7, "pass": true}, {"id": "SAMPLE-07", "ms": 462.14, "pass": false}, {"id": "SAMPLE-08", "ms": 451.06, "pass": false}, {"id": "SAMPLE-09", "ms": 487.38, "pass": false}, {"id": "SAMPLE-10", "ms": 513.68, "pass": false}];
+    const ctx = document.getElementById('timingChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: data.map(d => d.id),
+        datasets: [{
+          label: 'Response Time (ms)',
+          data: data.map(d => d.ms),
+          backgroundColor: data.map(d => d.pass ? 'rgba(34,197,94,0.7)' : 'rgba(239,68,68,0.7)'),
+          borderColor: data.map(d => d.pass ? '#22c55e' : '#ef4444'),
+          borderWidth: 1,
+          borderRadius: 6,
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ctx.parsed.y + ' ms' } }
+        },
+        scales: {
+          x: { grid: { color: '#1e2233' }, ticks: { color: '#8892a4' } },
+          y: {
+            grid: { color: '#1e2233' },
+            ticks: { color: '#8892a4', callback: v => v + ' ms' },
+            beginAtZero: true,
+            suggestedMax: 30000,
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

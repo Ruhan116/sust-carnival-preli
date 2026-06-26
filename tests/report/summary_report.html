@@ -36,21 +36,21 @@
 </head>
 <body>
   <h1>QueueStorm Investigator — Test Report</h1>
-  <p class="subtitle">Run at 2026-06-26 16:56:01 UTC &nbsp;·&nbsp; Endpoint: <code>https://sust-carnival-preli-deku.vercel.app</code></p>
+  <p class="subtitle">Run at 2026-06-26 17:29:03 UTC &nbsp;·&nbsp; Endpoint: <code>https://sust-carnival-preli-deku.vercel.app</code></p>
 
   <div class="health-bar">
     <strong>Health Check</strong>
     <span class="badge pass">✓ OK</span>
-    <span>GET /health → 200 &nbsp;·&nbsp; 424.12 ms</span>
+    <span>GET /health → 200 &nbsp;·&nbsp; 4747.74 ms</span>
   </div>
 
   <div class="cards">
     <div class="card"><div class="num blue">10</div><div class="lbl">Total Cases</div></div>
-    <div class="card"><div class="num green">4</div><div class="lbl">Passed</div></div>
-    <div class="card"><div class="num red">6</div><div class="lbl">Failed</div></div>
-    <div class="card"><div class="num yellow">3813.4 ms</div><div class="lbl">Avg Response</div></div>
-    <div class="card"><div class="num green">8129.25 ms</div><div class="lbl">Max Response</div></div>
-    <div class="card"><div class="num blue">451.06 ms</div><div class="lbl">Min Response</div></div>
+    <div class="card"><div class="num green">3</div><div class="lbl">Passed</div></div>
+    <div class="card"><div class="num red">7</div><div class="lbl">Failed</div></div>
+    <div class="card"><div class="num yellow">4312.4 ms</div><div class="lbl">Avg Response</div></div>
+    <div class="card"><div class="num green">14453.97 ms</div><div class="lbl">Max Response</div></div>
+    <div class="card"><div class="num blue">429.87 ms</div><div class="lbl">Min Response</div></div>
   </div>
 
   <div class="chart-wrap">
@@ -70,14 +70,14 @@
       <tbody>
         <tr>
           <td><b>SAMPLE-01</b><br><small>Wrong transfer with matching evidence</small></td>
-          <td class="pass">PASS</td>
-          <td>8129.25 ms</td>
+          <td class="fail">FAIL</td>
+          <td>14453.97 ms</td>
           <td>200</td>
           <td class="match">✓</td>
-          <td class="match">✓</td>
-          <td class="match">✓</td>
-          <td class="match">✓</td>
-          <td class="match">✓</td>
+          <td class="mismatch">✗</td>
+          <td class="mismatch">✗</td>
+          <td class="mismatch">✗</td>
+          <td class="mismatch">✗</td>
           <td class="match">✓</td>
           <td><span class="ok">✓</span></td>
           <td><span class="ok">✓</span></td>
@@ -86,7 +86,7 @@
         <tr>
           <td><b>SAMPLE-02</b><br><small>Wrong transfer claim with inconsistent evidence</small></td>
           <td class="fail">FAIL</td>
-          <td>6605.4 ms</td>
+          <td>6742.61 ms</td>
           <td>200</td>
           <td class="match">✓</td>
           <td class="match">✓</td>
@@ -101,7 +101,7 @@
         <tr>
           <td><b>SAMPLE-03</b><br><small>Failed payment with balance deducted</small></td>
           <td class="pass">PASS</td>
-          <td>4923.98 ms</td>
+          <td>6963.14 ms</td>
           <td>200</td>
           <td class="match">✓</td>
           <td class="match">✓</td>
@@ -116,7 +116,7 @@
         <tr>
           <td><b>SAMPLE-04</b><br><small>Refund request requiring safe handling</small></td>
           <td class="pass">PASS</td>
-          <td>6899.81 ms</td>
+          <td>6160.92 ms</td>
           <td>200</td>
           <td class="match">✓</td>
           <td class="match">✓</td>
@@ -131,7 +131,7 @@
         <tr>
           <td><b>SAMPLE-05</b><br><small>Phishing or social engineering report</small></td>
           <td class="fail">FAIL</td>
-          <td>5748.68 ms</td>
+          <td>6496.32 ms</td>
           <td>200</td>
           <td class="match">✓</td>
           <td class="match">✓</td>
@@ -146,7 +146,7 @@
         <tr>
           <td><b>SAMPLE-06</b><br><small>Vague complaint, insufficient evidence</small></td>
           <td class="pass">PASS</td>
-          <td>3912.7 ms</td>
+          <td>518.64 ms</td>
           <td>200</td>
           <td class="match">✓</td>
           <td class="match">✓</td>
@@ -161,7 +161,7 @@
         <tr>
           <td><b>SAMPLE-07</b><br><small>Agent cash-in issue, Bangla complaint</small></td>
           <td class="fail">FAIL</td>
-          <td>462.14 ms</td>
+          <td>447.74 ms</td>
           <td>200</td>
           <td class="match">✓</td>
           <td class="mismatch">✗</td>
@@ -176,7 +176,7 @@
         <tr>
           <td><b>SAMPLE-08</b><br><small>Multiple plausible transactions, ambiguous match</small></td>
           <td class="fail">FAIL</td>
-          <td>451.06 ms</td>
+          <td>467.49 ms</td>
           <td>200</td>
           <td class="match">✓</td>
           <td class="match">✓</td>
@@ -191,7 +191,7 @@
         <tr>
           <td><b>SAMPLE-09</b><br><small>Merchant settlement delay</small></td>
           <td class="fail">FAIL</td>
-          <td>487.38 ms</td>
+          <td>429.87 ms</td>
           <td>200</td>
           <td class="match">✓</td>
           <td class="mismatch">✗</td>
@@ -206,7 +206,7 @@
         <tr>
           <td><b>SAMPLE-10</b><br><small>Duplicate payment claim</small></td>
           <td class="fail">FAIL</td>
-          <td>513.68 ms</td>
+          <td>443.23 ms</td>
           <td>200</td>
           <td class="match">✓</td>
           <td class="mismatch">✗</td>
@@ -221,11 +221,11 @@
     </table>
   </div>
 
-  <p class="footer">Generated by QueueStorm Test Runner · 2026-06-26 16:56:01 UTC</p>
+  <p class="footer">Generated by QueueStorm Test Runner · 2026-06-26 17:29:03 UTC</p>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script>
-    const data = [{"id": "SAMPLE-01", "ms": 8129.25, "pass": true}, {"id": "SAMPLE-02", "ms": 6605.4, "pass": false}, {"id": "SAMPLE-03", "ms": 4923.98, "pass": true}, {"id": "SAMPLE-04", "ms": 6899.81, "pass": true}, {"id": "SAMPLE-05", "ms": 5748.68, "pass": false}, {"id": "SAMPLE-06", "ms": 3912.7, "pass": true}, {"id": "SAMPLE-07", "ms": 462.14, "pass": false}, {"id": "SAMPLE-08", "ms": 451.06, "pass": false}, {"id": "SAMPLE-09", "ms": 487.38, "pass": false}, {"id": "SAMPLE-10", "ms": 513.68, "pass": false}];
+    const data = [{"id": "SAMPLE-01", "ms": 14453.97, "pass": false}, {"id": "SAMPLE-02", "ms": 6742.61, "pass": false}, {"id": "SAMPLE-03", "ms": 6963.14, "pass": true}, {"id": "SAMPLE-04", "ms": 6160.92, "pass": true}, {"id": "SAMPLE-05", "ms": 6496.32, "pass": false}, {"id": "SAMPLE-06", "ms": 518.64, "pass": true}, {"id": "SAMPLE-07", "ms": 447.74, "pass": false}, {"id": "SAMPLE-08", "ms": 467.49, "pass": false}, {"id": "SAMPLE-09", "ms": 429.87, "pass": false}, {"id": "SAMPLE-10", "ms": 443.23, "pass": false}];
     const ctx = document.getElementById('timingChart').getContext('2d');
     new Chart(ctx, {
       type: 'bar',

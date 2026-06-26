@@ -1,13 +1,13 @@
 {
-  "run_at": "2026-06-26 16:56:01 UTC",
+  "run_at": "2026-06-26 17:29:03 UTC",
   "base_url": "https://sust-carnival-preli-deku.vercel.app",
   "summary": {
     "total": 10,
-    "passed": 4,
-    "failed": 6,
-    "avg_ms": 3813.4,
-    "min_ms": 451.06,
-    "max_ms": 8129.25
+    "passed": 3,
+    "failed": 7,
+    "avg_ms": 4312.4,
+    "min_ms": 429.87,
+    "max_ms": 14453.97
   },
   "health": {
     "url": "https://sust-carnival-preli-deku.vercel.app/health",
@@ -16,14 +16,14 @@
       "status": "ok"
     },
     "ok": true,
-    "elapsed_ms": 424.12
+    "elapsed_ms": 4747.74
   },
   "results": [
     {
       "case_id": "SAMPLE-01",
       "label": "Wrong transfer with matching evidence",
       "ticket_id": "TKT-001",
-      "elapsed_ms": 8129.25,
+      "elapsed_ms": 14453.97,
       "http_status": 200,
       "timed_out": false,
       "error": null,
@@ -33,22 +33,22 @@
         "enum_errors": [],
         "field_matches": {
           "ticket_id": true,
-          "relevant_transaction_id": true,
-          "evidence_verdict": true,
-          "case_type": true,
-          "department": true,
+          "relevant_transaction_id": false,
+          "evidence_verdict": false,
+          "case_type": false,
+          "department": false,
           "human_review_required_type": true,
           "confidence_in_range": true
         },
         "safety_violations": [],
-        "overall": "PASS"
+        "overall": "FAIL"
       }
     },
     {
       "case_id": "SAMPLE-02",
       "label": "Wrong transfer claim with inconsistent evidence",
       "ticket_id": "TKT-002",
-      "elapsed_ms": 6605.4,
+      "elapsed_ms": 6742.61,
       "http_status": 200,
       "timed_out": false,
       "error": null,
@@ -73,7 +73,7 @@
       "case_id": "SAMPLE-03",
       "label": "Failed payment with balance deducted",
       "ticket_id": "TKT-003",
-      "elapsed_ms": 4923.98,
+      "elapsed_ms": 6963.14,
       "http_status": 200,
       "timed_out": false,
       "error": null,
@@ -98,7 +98,7 @@
       "case_id": "SAMPLE-04",
       "label": "Refund request requiring safe handling",
       "ticket_id": "TKT-004",
-      "elapsed_ms": 6899.81,
+      "elapsed_ms": 6160.92,
       "http_status": 200,
       "timed_out": false,
       "error": null,
@@ -123,7 +123,7 @@
       "case_id": "SAMPLE-05",
       "label": "Phishing or social engineering report",
       "ticket_id": "TKT-005",
-      "elapsed_ms": 5748.68,
+      "elapsed_ms": 6496.32,
       "http_status": 200,
       "timed_out": false,
       "error": null,
@@ -151,7 +151,7 @@
       "case_id": "SAMPLE-06",
       "label": "Vague complaint, insufficient evidence",
       "ticket_id": "TKT-006",
-      "elapsed_ms": 3912.7,
+      "elapsed_ms": 518.64,
       "http_status": 200,
       "timed_out": false,
       "error": null,
@@ -176,7 +176,7 @@
       "case_id": "SAMPLE-07",
       "label": "Agent cash-in issue, Bangla complaint",
       "ticket_id": "TKT-007",
-      "elapsed_ms": 462.14,
+      "elapsed_ms": 447.74,
       "http_status": 200,
       "timed_out": false,
       "error": null,
@@ -201,7 +201,7 @@
       "case_id": "SAMPLE-08",
       "label": "Multiple plausible transactions, ambiguous match",
       "ticket_id": "TKT-008",
-      "elapsed_ms": 451.06,
+      "elapsed_ms": 467.49,
       "http_status": 200,
       "timed_out": false,
       "error": null,
@@ -226,7 +226,7 @@
       "case_id": "SAMPLE-09",
       "label": "Merchant settlement delay",
       "ticket_id": "TKT-009",
-      "elapsed_ms": 487.38,
+      "elapsed_ms": 429.87,
       "http_status": 200,
       "timed_out": false,
       "error": null,
@@ -251,7 +251,7 @@
       "case_id": "SAMPLE-10",
       "label": "Duplicate payment claim",
       "ticket_id": "TKT-010",
-      "elapsed_ms": 513.68,
+      "elapsed_ms": 443.23,
       "http_status": 200,
       "timed_out": false,
       "error": null,

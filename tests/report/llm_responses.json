@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-06-26 16:56:01 UTC",
+  "run_at": "2026-06-26 17:29:03 UTC",
   "base_url": "https://sust-carnival-preli-deku.vercel.app",
   "health": {
     "url": "https://sust-carnival-preli-deku.vercel.app/health",
@@ -8,14 +8,14 @@
       "status": "ok"
     },
     "ok": true,
-    "elapsed_ms": 424.12
+    "elapsed_ms": 4747.74
   },
   "responses": [
     {
       "case_id": "SAMPLE-01",
       "label": "Wrong transfer with matching evidence",
       "ticket_id": "TKT-001",
-      "elapsed_ms": 8129.25,
+      "elapsed_ms": 14453.97,
       "http_status": 200,
       "request": {
         "ticket_id": "TKT-001",
@@ -63,21 +63,21 @@
       },
       "actual_response": {
         "ticket_id": "TKT-001",
-        "relevant_transaction_id": "TXN-9101",
-        "evidence_verdict": "consistent",
-        "case_type": "wrong_transfer",
+        "relevant_transaction_id": null,
+        "evidence_verdict": "insufficient_data",
+        "case_type": "other",
         "severity": "medium",
-        "department": "dispute_resolution",
-        "agent_summary": "Customer reports sending 5000 BDT to a wrong number (+8801719876543) around 2 PM today, instead of the intended 01712345678. Transaction TXN-9101 for 5000 BDT to +8801719876543 at 14:08:22 is completed and matches the complaint details.",
-        "recommended_next_action": "Initiate a wrong transfer investigation for TXN-9101. Attempt to contact the recipient (+8801719876543) to request a voluntary return of funds. Inform the customer about the investigation process and expected timelines.",
-        "customer_reply": "Dear Customer, we understand your concern regarding the 5000 BDT transfer made to a wrong number today. We have noted the details of your complaint and the transaction (TXN-9101). We are initiating an investigation into this matter. Please note that recovering funds in a wrong transfer case depends on various factors, including the cooperation of the recipient. We will do our best to assist you. Any eligible amount will be returned through official channels, subject to verification and our standard dispute resolution process. We will keep you updated on the progress of our investigation.",
+        "department": "customer_support",
+        "agent_summary": "Automated analysis was unable to process this ticket. Manual investigation required.",
+        "recommended_next_action": "Escalate to supervisor for manual review.",
+        "customer_reply": "Thank you for contacting us. Your complaint has been received and is being reviewed by our team. We will update you through official channels shortly.",
         "human_review_required": true,
-        "confidence": 0.95,
+        "confidence": 0.3,
         "reason_codes": [
-          "wrong_transfer_confirmed",
-          "transaction_matched",
-          "wrong_transfer",
-          "transaction_match",
+          "analysis_failed",
+          "manual_review_needed",
+          "other",
+          "no_matching_transaction",
           "amount_match"
         ]
       },
@@ -87,22 +87,22 @@
         "enum_errors": [],
         "field_matches": {
           "ticket_id": true,
-          "relevant_transaction_id": true,
-          "evidence_verdict": true,
-          "case_type": true,
-          "department": true,
+          "relevant_transaction_id": false,
+          "evidence_verdict": false,
+          "case_type": false,
+          "department": false,
           "human_review_required_type": true,
           "confidence_in_range": true
         },
         "safety_violations": [],
-        "overall": "PASS"
+        "overall": "FAIL"
       }
     },
     {
       "case_id": "SAMPLE-02",
       "label": "Wrong transfer claim with inconsistent evidence",
       "ticket_id": "TKT-002",
-      "elapsed_ms": 6605.4,
+      "elapsed_ms": 6742.61,
       "http_status": 200,
       "request": {
         "ticket_id": "TKT-002",
@@ -162,18 +162,17 @@
         "case_type": "wrong_transfer",
         "severity": "medium",
         "department": "dispute_resolution",
-        "agent_summary": "Customer mistakenly sent 2000 BDT to an incorrect recipient (+8801812345678) via transaction TXN-9202 and requests a reversal.",
-        "recommended_next_action": "Initiate the wrong transfer recovery process for TXN-9202. Attempt to contact the recipient for fund recovery as per policy.",
-        "customer_reply": "We understand you mistakenly sent 2000 BDT to the wrong person and wish to reverse it. We have noted your request and initiated a review of transaction TXN-9202. Please be aware that recovering funds from a completed transfer to an incorrect recipient depends on various factors, including the cooperation of the recipient. We will investigate this matter according to our dispute resolution policy. Any eligible amount will be returned through official channels, subject to verification and our standard dispute resolution process. We will keep you updated on the progress.",
+        "agent_summary": "Customer claims to have mistakenly sent 2000 BDT to the wrong person and requests a reversal. Transaction TXN-9202 for 2000 BDT is consistent with the complaint.",
+        "recommended_next_action": "Initiate the wrong transfer investigation process for TXN-9202. Attempt to contact the recipient for consent to reverse funds, or advise the customer on the next steps for fund recovery.",
+        "customer_reply": "Dear Customer, we understand you mistakenly sent 2000 BDT to a wrong number and wish to reverse the transaction. We have noted the details of your complaint and the transaction (TXN-9202) for 2000 BDT. We are initiating an investigation into this matter. Any eligible amount will be returned through official channels, subject to verification and our standard dispute resolution process. We will keep you updated on the progress.",
         "human_review_required": true,
-        "confidence": 0.98,
+        "confidence": 0.95,
         "reason_codes": [
-          "wrong_transfer_claim",
-          "transaction_matched",
+          "amount_match",
+          "wrong_recipient_claim",
           "reversal_request",
           "wrong_transfer",
-          "transaction_match",
-          "amount_match"
+          "transaction_match"
         ]
       },
       "validation": {
@@ -197,7 +196,7 @@
       "case_id": "SAMPLE-03",
       "label": "Failed payment with balance deducted",
       "ticket_id": "TKT-003",
-      "elapsed_ms": 4923.98,
+      "elapsed_ms": 6963.14,
       "http_status": 200,
       "request": {
         "ticket_id": "TKT-003",
@@ -241,16 +240,17 @@
         "severity": "medium",
         "department": "payments_ops",
         "agent_summary": "Customer reported a 1200 BDT mobile recharge payment failed, but their balance was deducted. Transaction history confirms a failed payment of 1200 BDT.",
-        "recommended_next_action": "Investigate TXN-9301 to confirm balance deduction and initiate reversal if applicable. Verify if the recharge was eventually applied.",
-        "customer_reply": "Dear customer, we understand you experienced an issue with a 1200 BDT mobile recharge payment that failed but deducted your balance. We have noted your complaint and are investigating the transaction (TXN-9301). Any eligible amount will be returned through official channels, subject to verification and our standard dispute resolution process. We will update you as soon as possible.",
+        "recommended_next_action": "Investigate TXN-9301 to confirm if funds were indeed deducted despite the 'failed' status and initiate a reversal if necessary.",
+        "customer_reply": "Dear customer, we understand your concern regarding the failed mobile recharge payment of 1200 BDT where your balance was deducted. We have noted your complaint and are investigating transaction TXN-9301. Any eligible amount will be returned through official channels, subject to verification and our standard dispute resolution process. We will notify you once the investigation is complete.",
         "human_review_required": true,
-        "confidence": 0.95,
+        "confidence": 1.0,
         "reason_codes": [
+          "amount_match",
+          "status_match",
+          "transaction_found",
+          "refund_requested",
           "payment_failed",
-          "consistent_evidence",
-          "refund_request_consistent_evidence",
-          "transaction_match",
-          "amount_match"
+          "transaction_match"
         ]
       },
       "validation": {
@@ -274,7 +274,7 @@
       "case_id": "SAMPLE-04",
       "label": "Refund request requiring safe handling",
       "ticket_id": "TKT-004",
-      "elapsed_ms": 6899.81,
+      "elapsed_ms": 6160.92,
       "http_status": 200,
       "request": {
         "ticket_id": "TKT-004",
@@ -317,18 +317,17 @@
         "case_type": "refund_request",
         "severity": "low",
         "department": "customer_support",
-        "agent_summary": "Customer requests a refund of 500 BDT for a payment made to merchant MERCHANT-7821 (TXN-9401) as they changed their mind about the product.",
-        "recommended_next_action": "Advise the customer to contact the merchant (MERCHANT-7821) directly to request a refund for the product. Explain that our platform facilitates the payment but the refund decision rests with the merchant based on their return policy.",
-        "customer_reply": "Dear Customer, we understand you wish to refund your 500 BDT payment made to MERCHANT-7821. For refunds related to products or services purchased from a merchant, the first step is to directly contact the merchant. They will be able to assist you with their return and refund policy. Please reach out to MERCHANT-7821 regarding your request. If you face any issues after contacting the merchant, please let us know.",
+        "agent_summary": "Customer requests a refund of 500 BDT for a completed payment (TXN-9401) to merchant MERCHANT-7821, stating they changed their mind about the product.",
+        "recommended_next_action": "Advise the customer to contact the merchant directly for a refund, as per our policy for completed merchant payments. If the merchant refuses or does not respond, escalate for further review.",
+        "customer_reply": "Dear Customer, we understand you wish to refund your 500 BDT payment to MERCHANT-7821. For refunds on completed merchant payments where you've changed your mind, we recommend contacting the merchant directly first, as they manage their product returns and refund policies. Please reach out to MERCHANT-7821 to initiate the refund process. If you encounter any difficulties, please let us know, and we will assist you further.",
         "human_review_required": true,
         "confidence": 1.0,
         "reason_codes": [
-          "amount_match",
-          "counterparty_match",
-          "transaction_status_consistent",
-          "refund_request_identified",
+          "refund_request_consistent_evidence",
+          "low_severity_transaction",
           "refund_request",
-          "transaction_match"
+          "transaction_match",
+          "amount_match"
         ]
       },
       "validation": {
@@ -352,7 +351,7 @@
       "case_id": "SAMPLE-05",
       "label": "Phishing or social engineering report",
       "ticket_id": "TKT-005",
-      "elapsed_ms": 5748.68,
+      "elapsed_ms": 6496.32,
       "http_status": 200,
       "request": {
         "ticket_id": "TKT-005",
@@ -387,15 +386,16 @@
         "case_type": "phishing_or_social_engineering",
         "severity": "critical",
         "department": "fraud_risk",
-        "agent_summary": "Customer reported receiving a suspicious call from someone impersonating bKash, asking for their OTP and threatening account blockage. The customer did not share any information.",
-        "recommended_next_action": "Advise the customer to block the suspicious number and never share sensitive information. Escalate to the fraud risk team for potential investigation of the reported number and pattern analysis.",
+        "agent_summary": "Customer reported receiving a suspicious call from someone impersonating bKash, who asked for their OTP and threatened account blockage. The customer did not share any information.",
+        "recommended_next_action": "Advise the customer that bKash never asks for PIN or OTP. Reassure them that their account is safe since no information was shared. Recommend blocking the suspicious number and educate them on identifying phishing attempts.",
         "customer_reply": "For security, please never share your PIN, OTP, or password with anyone, including our support team.",
         "human_review_required": true,
         "confidence": 1.0,
         "reason_codes": [
           "phishing_attempt",
-          "otp_request_scam",
-          "account_security_threat",
+          "otp_request",
+          "account_security_risk",
+          "no_transaction_history",
           "phishing_or_social_engineering",
           "no_matching_transaction"
         ]
@@ -424,7 +424,7 @@
       "case_id": "SAMPLE-06",
       "label": "Vague complaint, insufficient evidence",
       "ticket_id": "TKT-006",
-      "elapsed_ms": 3912.7,
+      "elapsed_ms": 518.64,
       "http_status": 200,
       "request": {
         "ticket_id": "TKT-006",
@@ -473,18 +473,16 @@
         "relevant_transaction_id": null,
         "evidence_verdict": "insufficient_data",
         "case_type": "other",
-        "severity": "low",
+        "severity": "medium",
         "department": "customer_support",
-        "agent_summary": "Customer reports 'something is wrong with my money' but provides no specific details, amount, or transaction to investigate. Transaction history shows two completed transactions.",
-        "recommended_next_action": "Contact customer to gather more specific details about their concern, including the exact amount, date, and type of transaction they are referring to.",
-        "customer_reply": "Thank you for reaching out. To help us understand and resolve your concern about your money, please provide more specific details. Could you tell us which transaction you are referring to, including the amount, date, and what you believe went wrong? This will help us investigate thoroughly.",
-        "human_review_required": false,
-        "confidence": 0.7,
+        "agent_summary": "System error during analysis. Manual review required.",
+        "recommended_next_action": "Escalate to supervisor for manual review.",
+        "customer_reply": "Thank you for contacting us. Your complaint has been received and is being reviewed by our team. We will update you through official channels shortly.",
+        "human_review_required": true,
+        "confidence": 0.3,
         "reason_codes": [
-          "vague_complaint",
-          "no_specific_transaction_mentioned",
-          "other",
-          "no_matching_transaction"
+          "system_error",
+          "manual_review_needed"
         ]
       },
       "validation": {
@@ -508,7 +506,7 @@
       "case_id": "SAMPLE-07",
       "label": "Agent cash-in issue, Bangla complaint",
       "ticket_id": "TKT-007",
-      "elapsed_ms": 462.14,
+      "elapsed_ms": 447.74,
       "http_status": 200,
       "request": {
         "ticket_id": "TKT-007",
@@ -583,7 +581,7 @@
       "case_id": "SAMPLE-08",
       "label": "Multiple plausible transactions, ambiguous match",
       "ticket_id": "TKT-008",
-      "elapsed_ms": 451.06,
+      "elapsed_ms": 467.49,
       "http_status": 200,
       "request": {
         "ticket_id": "TKT-008",
@@ -673,7 +671,7 @@
       "case_id": "SAMPLE-09",
       "label": "Merchant settlement delay",
       "ticket_id": "TKT-009",
-      "elapsed_ms": 487.38,
+      "elapsed_ms": 429.87,
       "http_status": 200,
       "request": {
         "ticket_id": "TKT-009",
@@ -748,7 +746,7 @@
       "case_id": "SAMPLE-10",
       "label": "Duplicate payment claim",
       "ticket_id": "TKT-010",
-      "elapsed_ms": 513.68,
+      "elapsed_ms": 443.23,
       "http_status": 200,
       "request": {
         "ticket_id": "TKT-010",

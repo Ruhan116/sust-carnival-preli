@@ -14,7 +14,7 @@ from typing import Any
 from app.llm_core import analyze_with_llm
 from app.preprocessing import PreprocessedInput, preprocess
 from app.safety_guardrails import run_safety_pipeline
-from app.schemas import TicketRequest, TicketResponse
+from app.schemas import TicketRequest, TicketResponse, TransactionEntry
 
 logger = logging.getLogger("queuestorm.orchestrator")
 
@@ -43,7 +43,10 @@ def _derive_confidence(verdict: str, existing: Any | None) -> float:
 
 # ── Human review enforcement ────────────────────────────────────────────────
 
-def _enforce_human_review(data: dict) -> bool:
+def _enforce_human_review(
+    data: dict,
+    transactions: list[TransactionEntry],
+) -> bool:
     """Determine if human_review_required should be True.
 
     Returns True if any of the mandatory conditions are met,
@@ -67,8 +70,11 @@ def _enforce_human_review(data: dict) -> bool:
     if severity in ("critical", "high"):
         return True
 
-    # Check for high-value amount (>10,000 BDT) — look in reason codes or agent summary
-    # This is best-effort; the LLM should already flag high-value cases
+    # High-value transactions (>10,000 BDT) always require human review
+    for tx in transactions:
+        if tx.amount > 10000:
+            return True
+
     return data.get("human_review_required", False)
 
 
@@ -108,6 +114,64 @@ def _build_reason_codes(data: dict, ctx: PreprocessedInput) -> list[str]:
     return codes[:10]  # Cap at 10 codes
 
 
+# ── Output assembly ──────────────────────────────────────────────────────────
+
+def _finalize_response(data: dict, ctx: PreprocessedInput) -> TicketResponse:
+    """Apply safety guardrails and output building to a raw analysis dict."""
+    safety_result = run_safety_pipeline(
+        data=data,
+        request_ticket_id=ctx.ticket_id,
+        transactions=ctx.transactions,
+    )
+
+    if safety_result.credential_violation:
+        logger.warning("Credential safety violation detected for ticket %s", ctx.ticket_id)
+    if safety_result.commitment_violation:
+        logger.warning("Commitment safety violation detected for ticket %s", ctx.ticket_id)
+    if safety_result.third_party_violation:
+        logger.warning("Third-party safety violation detected for ticket %s", ctx.ticket_id)
+    if safety_result.schema_errors:
+        logger.warning(
+            "Schema issues for ticket %s: %s",
+            ctx.ticket_id,
+            "; ".join(safety_result.schema_errors),
+        )
+
+    finalized = safety_result.data
+    finalized["confidence"] = _derive_confidence(
+        finalized.get("evidence_verdict", "insufficient_data"),
+        finalized.get("confidence"),
+    )
+    finalized["reason_codes"] = _build_reason_codes(finalized, ctx)
+    finalized["human_review_required"] = _enforce_human_review(
+        finalized, ctx.transactions
+    )
+    finalized["ticket_id"] = ctx.ticket_id
+
+    try:
+        return TicketResponse(**finalized)
+    except Exception as e:
+        logger.error("Failed to build TicketResponse for %s: %s", ctx.ticket_id, e)
+        return TicketResponse(
+            ticket_id=ctx.ticket_id,
+            relevant_transaction_id=None,
+            evidence_verdict="insufficient_data",
+            case_type="other",
+            severity="medium",
+            department="customer_support",
+            agent_summary="Automated analysis encountered an error. Manual review required.",
+            recommended_next_action="Escalate to supervisor for manual review.",
+            customer_reply=(
+                "Thank you for contacting us. Your complaint has been received and "
+                "is being reviewed by our team. We will update you through official "
+                "channels shortly."
+            ),
+            human_review_required=True,
+            confidence=0.3,
+            reason_codes=["analysis_error", "manual_review_needed"],
+        )
+
+
 # ── Main orchestrator ───────────────────────────────────────────────────────
 
 async def process_ticket(request: TicketRequest) -> TicketResponse:
@@ -129,70 +193,12 @@ async def process_ticket(request: TicketRequest) -> TicketResponse:
         len(ctx.transactions),
     )
 
-    # Layer 4: LLM call
+    # Layer 4: LLM call (falls back to rule-based internally on failure)
     llm_result = await analyze_with_llm(ctx)
-    logger.info("LLM returned result for ticket %s", ctx.ticket_id)
+    logger.info("Analysis returned result for ticket %s", ctx.ticket_id)
 
-    # Layer 5: Safety guardrails
-    safety_result = run_safety_pipeline(
-        data=llm_result,
-        request_ticket_id=ctx.ticket_id,
-        transactions=ctx.transactions,
-    )
+    return _finalize_response(llm_result, ctx)
 
-    if safety_result.credential_violation:
-        logger.warning("Credential safety violation detected for ticket %s", ctx.ticket_id)
-    if safety_result.commitment_violation:
-        logger.warning("Commitment safety violation detected for ticket %s", ctx.ticket_id)
-    if safety_result.schema_errors:
-        logger.warning(
-            "Schema issues for ticket %s: %s",
-            ctx.ticket_id,
-            "; ".join(safety_result.schema_errors),
-        )
 
-    data = safety_result.data
-
-    # Layer 6: Output building
-
-    # 6a. Derive confidence
-    data["confidence"] = _derive_confidence(
-        data.get("evidence_verdict", "insufficient_data"),
-        data.get("confidence"),
-    )
-
-    # 6b. Build reason codes
-    data["reason_codes"] = _build_reason_codes(data, ctx)
-
-    # 6c. Enforce human review rules
-    data["human_review_required"] = _enforce_human_review(data)
-
-    # 6d. Ensure ticket_id is echoed correctly
-    data["ticket_id"] = ctx.ticket_id
-
-    # Build Pydantic response model
-    try:
-        response = TicketResponse(**data)
-    except Exception as e:
-        logger.error("Failed to build TicketResponse for %s: %s", ctx.ticket_id, e)
-        # Last-resort fallback
-        response = TicketResponse(
-            ticket_id=ctx.ticket_id,
-            relevant_transaction_id=None,
-            evidence_verdict="insufficient_data",
-            case_type="other",
-            severity="medium",
-            department="customer_support",
-            agent_summary="Automated analysis encountered an error. Manual review required.",
-            recommended_next_action="Escalate to supervisor for manual review.",
-            customer_reply=(
-                "Thank you for contacting us. Your complaint has been received and "
-                "is being reviewed by our team. We will update you through official "
-                "channels shortly."
-            ),
-            human_review_required=True,
-            confidence=0.3,
-            reason_codes=["analysis_error", "manual_review_needed"],
-        )
-
-    return response
+# Public alias for use in main.py fallback path
+finalize_response = _finalize_response

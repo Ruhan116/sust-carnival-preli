@@ -18,7 +18,9 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.orchestrator import process_ticket
+from app.orchestrator import finalize_response, process_ticket
+from app.preprocessing import preprocess
+from app.rule_based import rule_based_analyze
 from app.schemas import TicketRequest, TicketResponse
 
 # Load environment variables
@@ -116,22 +118,13 @@ async def analyze_ticket(request: TicketRequest) -> TicketResponse:
             exc_info=True,
         )
 
-        # Return a safe fallback rather than a 500
-        return TicketResponse(
-            ticket_id=request.ticket_id,
-            relevant_transaction_id=None,
-            evidence_verdict="insufficient_data",
-            case_type="other",
-            severity="medium",
-            department="customer_support",
-            agent_summary="System error during analysis. Manual review required.",
-            recommended_next_action="Escalate to supervisor for manual review.",
-            customer_reply=(
-                "Thank you for contacting us. Your complaint has been received and "
-                "is being reviewed by our team. We will update you through official "
-                "channels shortly."
-            ),
-            human_review_required=True,
-            confidence=0.3,
-            reason_codes=["system_error", "manual_review_needed"],
+        # Last-resort: rule-based fallback instead of generic error response
+        ctx = preprocess(request)
+        fallback_data = rule_based_analyze(ctx)
+        response = finalize_response(fallback_data, ctx)
+        logger.info(
+            "Used rule-based fallback for ticket %s | case=%s",
+            request.ticket_id,
+            response.case_type,
         )
+        return response

@@ -1,10 +1,11 @@
 """
 Layer 5 — Safety Guardrails (Post-Generation).
 
-Three deterministic code-level checks that run on the LLM output:
+Four deterministic code-level checks that run on the LLM output:
   5a. Credential Filter — blocks PIN/OTP/password requests
   5b. Unauthorized Commitment Filter — blocks refund confirmations
-  5c. Schema Validator — enforces response structure correctness
+  5c. Third-Party Contact Filter — blocks unofficial contact instructions
+  5d. Schema Validator — enforces response structure correctness
 """
 
 from __future__ import annotations
@@ -107,7 +108,45 @@ def filter_unauthorized_commitments(text: str) -> tuple[str, bool]:
     return text, False
 
 
-# ── 5c. Schema Validator ────────────────────────────────────────────────────
+# ── 5c. Third-Party Contact Filter ──────────────────────────────────────────
+
+THIRD_PARTY_PATTERNS = [
+    r"contact\s+(this|the|that|an?\s+)?(unofficial|external|third[\s-]?party)",
+    r"call\s+(this|the|that)\s+(number|hotline|line)",
+    r"call\s+\+?\d{10,}",
+    r"whatsapp\s+(us|me|at|on)",
+    r"telegram\s+(us|me|at|on|group|channel)",
+    r"visit\s+(this|the|that)\s+(link|url|website|site)",
+    r"(click|open)\s+(this|the|that)\s+(link|url)",
+    r"contact\s+(a|any)\s+third\s+party",
+    r"unofficial\s+(number|line|channel|link|hotline|support)",
+    r"external\s+(link|url|website|number|support|channel)",
+    r"reach\s+out\s+to\s+(this|that)\s+(number|link)",
+    r"message\s+(us|me)\s+on\s+(whatsapp|telegram|facebook|messenger)",
+]
+
+_COMPILED_THIRD_PARTY = [re.compile(p, re.IGNORECASE) for p in THIRD_PARTY_PATTERNS]
+
+SAFE_THIRD_PARTY_REPLACEMENT = (
+    "For your security, please contact us only through our official in-app support "
+    "channel or call center. Do not use unofficial numbers, links, or third-party "
+    "contacts."
+)
+
+
+def filter_third_party_instructions(text: str) -> tuple[str, bool]:
+    """Scan text for instructions to contact unofficial third parties.
+
+    Returns:
+        Tuple of (safe_text, violation_detected).
+    """
+    for pattern in _COMPILED_THIRD_PARTY:
+        if pattern.search(text):
+            return SAFE_THIRD_PARTY_REPLACEMENT, True
+    return text, False
+
+
+# ── 5d. Schema Validator ────────────────────────────────────────────────────
 
 VALID_CASE_TYPES = {e.value for e in CaseType}
 VALID_SEVERITIES = {e.value for e in Severity}
@@ -236,6 +275,7 @@ class SafetyCheckResult:
     data: dict
     credential_violation: bool = False
     commitment_violation: bool = False
+    third_party_violation: bool = False
     schema_errors: list[str] = field(default_factory=list)
 
 
@@ -283,7 +323,16 @@ def run_safety_pipeline(
             result.commitment_violation = True
             result.data["recommended_next_action"] = safe_action
 
-    # 5c. Schema validation
+    # 5c. Third-party contact filter on customer_reply
+    if "customer_reply" in result.data:
+        safe_reply, tp_violation = filter_third_party_instructions(
+            result.data["customer_reply"]
+        )
+        if tp_violation:
+            result.third_party_violation = True
+            result.data["customer_reply"] = safe_reply
+
+    # 5d. Schema validation
     valid_tx_ids = {tx.transaction_id for tx in transactions}
     validation = validate_response_schema(
         result.data, request_ticket_id, valid_tx_ids

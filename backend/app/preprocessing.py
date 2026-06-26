@@ -55,17 +55,25 @@ class MatchSignals:
     formatted_history: str = ""
 
 
+_BANGLA_DIGIT_MAP = str.maketrans("০১২৩৪৫৬৭৮৯", "0123456789")
+
+
+def _normalize_bengali_digits(text: str) -> str:
+    """Convert Bengali numerals (০-৯) to ASCII digits."""
+    return text.translate(_BANGLA_DIGIT_MAP)
+
+
 def _extract_amounts_from_text(text: str) -> list[float]:
     """Extract numeric amounts from complaint text."""
-    # Match patterns like "5000", "5,000", "5000.00", "৫০০০"
-    # Also handles "taka", "tk", "BDT" suffixes
+    # Normalize Bengali digits before regex matching
+    normalized = _normalize_bengali_digits(text)
     patterns = [
         r"(\d[\d,]*\.?\d*)\s*(?:taka|tk|bdt|টাকা)?",
         r"(?:taka|tk|bdt|টাকা)\s*(\d[\d,]*\.?\d*)",
     ]
     amounts: list[float] = []
     for p in patterns:
-        for m in re.finditer(p, text, re.IGNORECASE):
+        for m in re.finditer(p, normalized, re.IGNORECASE):
             try:
                 val = float(m.group(1).replace(",", ""))
                 if val > 0:

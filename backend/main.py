@@ -18,6 +18,10 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+# Ensure the backend directory is in the Python path for Vercel
+import sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 from app.orchestrator import process_ticket
 from app.schemas import TicketRequest, TicketResponse
 
